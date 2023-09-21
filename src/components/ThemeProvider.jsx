@@ -1,19 +1,21 @@
-import React, { createContext } from "react";
-import { node } from "prop-types";
+import React, { createContext } from 'react';
+import { node } from 'prop-types';
 const ThemeContext = createContext();
 
 class ThemeProvider extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      theme: "light"
+      theme: localStorage.getItem('theme') || 'light',
     };
   }
 
   toggleTheme = () => {
+    const newTheme = this.state.theme === 'light' ? 'dark' : 'light';
     this.setState((prevState) => ({
-      theme: prevState.theme === "light" ? "dark" : "light"
+      theme: newTheme,
     }));
+    localStorage.setItem('theme', newTheme);
   };
 
   render() {
@@ -21,7 +23,7 @@ class ThemeProvider extends React.Component {
       <ThemeContext.Provider
         value={{
           theme: this.state.theme,
-          toggleTheme: this.toggleTheme
+          toggleTheme: this.toggleTheme,
         }}
       >
         {this.props.children}
@@ -30,7 +32,7 @@ class ThemeProvider extends React.Component {
   }
 }
 ThemeProvider.propTypes = {
-  children: node.isRequired
+  children: node.isRequired,
 };
 
 export { ThemeProvider, ThemeContext };
